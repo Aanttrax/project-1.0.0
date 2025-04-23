@@ -1,0 +1,81 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx-project-1.0.0
+    restart: unless-stopped
+    expose:
+      - 80
+    networks:
+      - network-project-1.0.0
+    labels:
+      - project=1.0.0
+      - environment=prod
+      - services=nginx
+      - name=nginx-project-1.0.0
+    depends_on:
+      - orchestrator
+      - ms-tasks
+      - ms-auth
+    volumes:
+      - ./nginx-taskApp/frontend.conf:/etc/nginx/conf.d/frontend.conf
+      - ./nginx-taskApp/api.conf:/etc/nginx/conf.d/api.conf
+
+  orchestrator:
+    build: ./orchestrator/
+    container_name: orchestrator-prod
+    labels:
+      - project=1.0.0
+      - environment=prod
+      - services=microservices
+      - name=orchestrator-prod
+    env_file:
+      - ./orchestrator/.env
+    expose:
+      - 4000
+    networks:
+      - network-project-1.0.0
+
+  ms-tasks:
+    build: ./ms-tasks/
+    container_name: ms-tasks-prod
+    labels:
+      - project=1.0.0
+      - name=ms-tasks-prod
+    env_file:
+      - ./ms-tasks/.env
+    expose:
+      - 3200
+    networks:
+      - network-project-1.0.0
+
+  ms-auth:
+    build: ./ms-auth/
+    container_name: ms-auth-prod
+    labels:
+      - project=1.0.0
+      - environment=prod
+      - services=microservices
+      - name=ms-auth-prod
+    env_file:
+      - ./ms-auth/.env
+    expose:
+      - 3100
+    networks:
+      - network-project-1.0.0
+
+  task-app:
+    build:
+      context: ./task-app/
+      dockerfile: Dockerfile
+      args:
+        NG_APP_API_URL: http://orchestrator:4000/
+    container_name: task-app-prod
+    labels:
+      - project=1.0.0
+      - environment=prod
+      - services=frontend
+      - name=ms-task-app-prod
+ 
+networks:
+  network-project-1.0.0:
+    driver: bridge

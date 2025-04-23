@@ -1,0 +1,21 @@
+[submodule "task-app"]
+	path = task-app
+	url = git@github.com:Aanttrax/task-app.git
+  branch = main
+[submodule "nginx-taskApp"]
+	path = nginx-taskApp
+	url = git@github.com:Aanttrax/nginx-taskApp.git
+  branch = main
+[submodule "ms-tasks"]
+	path = ms-tasks
+	url = git@github.com:Aanttrax/ms-tasks.git
+  branch = main
+[submodule "ms-auth"]
+	path = ms-auth
+	url = git@github.com:Aanttrax/ms-auth.git
+  branch = main
+[submodule "orchestrator"]
+	path = orchestrator
+	url = git@github.com:Aanttrax/orchestrator.git
+  branch = main
+
